@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+        <table border="1">
+            <tr>
+                <td colspan="7">
+                    <input type.left="text" id="inputBox1" value="0">
+                </td>
+            </tr>
+
+            <tr>
+                <td class="digitopp" onclick="operations('cos')"colspan="1">cos</td>
+                <td class="digitopp" onclick="operations('sin')" colspan="1">sin</td> 
+                <td class="digitB" onclick="digitBtn(7)">7</td>
+                <td class="digitB" onclick="digitBtn(8)">8</td>
+                <td class="digitB" onclick="digitBtn(9)">9</td>
+                <td class="league" colspan="2" onclick="digitalBtn(0)">AC</td>   
+            </tr>
+            <tr>
+                <td class="digitopp" onclick="operations('tan')" colspan="1">tan</td>
+                <td class="digitopp" onclick="operations('base')">x<sup>n</td>
+                <td class="digitB" onclick="digitBtn(4)">4</td>
+                <td class="digitB" onclick="digitBtn(5)">5</td>
+                <td class="digitB" onclick="digitBtn(6)">6</td>
+                <td class="digitop" onclick="operation('*')">x</td>
+                <td class="digitop" onclick="operation('/')">/</td>
+
+            </tr>
+            <tr>
+                <td class="digitopp" onclick="operations('ln')">ln</td>
+                <td class="digitopp" onclick="operations('radicand')"><sup>n</sup>&radic;x</td>
+                <td class="digitB" onclick="digitBtn(1)">1</td>
+                <td class="digitB" onclick="digitBtn(2)">2</td>
+                <td class="digitB" onclick="digitBtn(3)">3</td>
+                <td class="digitop" onclick="operation('+')">+</td>
+                <td class="digitop" onclick="operation('-')">-</td>
+            </tr>
+            <tr>
+                <td class="digitopp" colspan="1" onclick="operations('log')">log</td>
+                <td class="digitopp" onclick="digitBtn(Math.PI)">&pi;</td>
+                <td class="digitB" onclick="digitBtn('.')" colspan="1">.</td>
+                <td class="digitB" onclick="digitBtn(0)">0</td>
+                <td class="digitB" onclick="operation('%')">%</td>
+                <td class="digitop" colspan="2" onclick="equalsBtn()">=</td>
+            </tr>
+        </table>
+
+        <div id="myLink">
+            <p>© 2025 Phōtizō. All rights reserved.</p>
+        </div>
+
+
+
+<script>
+    var newline = true;
+    var value1;
+    var currentOperator;
+    
+    function digitBtn(button){
+        if(newline==true){
+            document.getElementById("inputBox1").value = button;
+            newline = false; 
+        } else {
+            var currentValue = document.getElementById("inputBox1").value;
+            document.getElementById("inputBox1").value = currentValue + button;
+        }
+    }
+    
+    function digitalBtn(){
+        document.getElementById("inputBox1").value = 0;
+        newline = true;
+    }
+    
+    function operation(operator){ 
+        currentOperator = operator;
+        value1 = parseFloat(document.getElementById("inputBox1").value);
+        document.getElementById("inputBox1").value = "(" + value1 + ")" + operator;
+        newline = true;
+    }
+    
+    function operations(operator){ 
+        currentOperator = operator;
+        value1 = parseFloat(document.getElementById("inputBox1").value);
+        
+        // For unary operations, calculate immediately
+        if (['sin', 'cos', 'tan', 'ln', 'log','base','radicand'].includes(operator)) {
+            document.getElementById("inputBox1").value = operator + "(" + value1 + ")";
+            newline = true;  
+        } else {
+            equalsBtn();
+        }
+    }
+    
+    function equalsBtn(){
+        var value2 = parseFloat(document.getElementById("inputBox1").value);
+        var final_amount;
+        var pi = Math.PI;
+        
+        function degToRad(degrees) {
+            return degrees * (pi / 180);
+        }
+        
+        function roundNearZero(value) {
+            return Math.abs(value) < 0.000000001 ? 0 : value;
+        }
+
+        switch (currentOperator) {
+            case "+":
+                final_amount = value1 + value2;
+                break;
+            case "-":
+                final_amount = value1 - value2;
+                break;
+            case "*":
+                final_amount = value1 * value2;
+                break;
+            case "/":
+                final_amount = value1 / value2;
+                break;
+            case "sin":
+                final_amount = roundNearZero(Math.sin(degToRad(value1)));
+                break;
+            case "cos":
+                final_amount = roundNearZero(Math.cos(degToRad(value1)));
+                break;
+            case "tan":
+                final_amount = roundNearZero(Math.tan(degToRad(value1)));
+                break;
+            case "ln":
+                final_amount = Math.log(value1);
+                break;
+            case "log":
+                final_amount = Math.log10(value1);
+                break;
+            case "base":
+                final_amount = Math.pow(value1, value2);
+                break;
+            case "radicand":
+                final_amount = Math.pow(value1, 1/value2);
+                break;
+            case "%":
+                final_amount = value1/100;
+                break;
+            default:
+                final_amount = value2; // If no operation selected, keep current value
+        }
+
+
+        document.getElementById("inputBox1").value = final_amount;
+        value1 = 0;
+        newline = true;
+    }
+        window.addEventListener("load", function() {
+            document.querySelector('.loader-wrapper').style.opacity = '0';
+                setTimeout(function() {
+                    document.querySelector('.loader-wrapper').style.display = 'none';
+                }, 500);
+            });
+</script>
+    </body>
+</html>
